@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, AlertController } from 'ionic-angular';
 import { Validator, FormBuilder, FormGroup, Validators  } from '@angular/forms';
 
 @Component({
@@ -9,7 +9,8 @@ import { Validator, FormBuilder, FormGroup, Validators  } from '@angular/forms';
 export class HomePage {
 
   public form : FormGroup;
-  constructor(private fb : FormBuilder) {
+  public nome : "";
+  constructor(private fb : FormBuilder,private alert : AlertController) {
     this.form = this.fb.group({
 
       peso: ['', Validators.compose([
@@ -23,6 +24,31 @@ export class HomePage {
         Validators.required
       ])]
     });
+  }
+
+  alertInput(){
+    let alert = this.alert.create({
+        title : "Informe seu nome",
+        inputs : [
+          {
+            name:"nome",
+            placeholder : "Nome"
+          }
+        ],
+        buttons : [
+          {
+            text : "Cancelar",
+            role : "cancel",
+          },
+          {
+            text:"Avançar",
+            handler: data => {
+              this.nome = data.nome
+              this.calcularIMC()
+            }
+          }
+        ]
+    }).present();
   }
 
   calcularIMC(){
@@ -47,7 +73,7 @@ export class HomePage {
       resultado = "Obesidade grave";
     else if(imc > 40)
       resultado = "Obesidade Morbida";     
-    alert(imc.toFixed(2) + "\n" + resultado);
+    alert("Olá "+ this.nome + " seu IMC é: " + imc.toFixed(2) + "\n" + resultado);
   }
 
 }
